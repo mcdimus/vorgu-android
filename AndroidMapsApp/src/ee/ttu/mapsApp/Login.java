@@ -24,10 +24,10 @@ public class Login extends Activity {
 	private Button logInButton;
 	private EditText userNameEdit;
 	private EditText passwordEdit;
-	private ProgressDialog dialog;
+	// private ProgressDialog dialog;
 	private String parameters;
 	private String URL = "http://mcdimus.appspot.com/login";
-	private AlertDialog.Builder builder;
+	// private AlertDialog.Builder builder;
 	private CheckBox rememberPassword;
 
 	public static final String PREFS_NAME = "AppSettings";
@@ -38,15 +38,22 @@ public class Login extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		final Connection connection = new Connection();
-		if(savedSettings() == null) {
+
+		// if no saved settings found show login activity
+		if (savedSettings() == null) {
 			setContentView(R.layout.login);
-			this.signUpButton = (Button) this.findViewById(R.id.buttonSignUp);
-			this.logInButton = (Button) this.findViewById(R.id.buttonLogIn);
-			this.rememberPassword = (CheckBox) this.findViewById(R.id.chkRememberPassword);
+
+			userNameEdit = (EditText) findViewById(R.id.editUserName);
+			passwordEdit = (EditText) findViewById(R.id.editPassword);
+			signUpButton = (Button) this.findViewById(R.id.buttonSignUp);
+			logInButton = (Button) this.findViewById(R.id.buttonLogIn);
+			rememberPassword = (CheckBox) this
+					.findViewById(R.id.chkRememberPassword);
 			final Drawable drawable = this.getResources().getDrawable(
 					R.drawable.alert_dialog_icon);
-			builder = new AlertDialog.Builder(Login.this);
+
 			this.signUpButton.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
 					startActivity(new Intent(Login.this, Registration.class));
@@ -54,49 +61,55 @@ public class Login extends Activity {
 			});
 			this.logInButton.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					dialog = ProgressDialog.show(Login.this, "",
-							"Loading. Please wait...", true);
-					dialog.setCancelable(true);
-					userNameEdit = (EditText) findViewById(R.id.editUserName);
-					passwordEdit = (EditText) findViewById(R.id.editPassword);
-					parameters = "username=" + userNameEdit.getText().toString()
-							+ "&password=" + passwordEdit.getText().toString();
+					// dialog = ProgressDialog.show(Login.this, "",
+					// "Loading. Please wait...", true);
+					// dialog.setCancelable(true);
+
+					parameters = "username="
+							+ userNameEdit.getText().toString() + "&password="
+							+ passwordEdit.getText().toString();
 					try {
+						// if connected and answer received
 						if (connection.connect(parameters, URL)) {
-							dialog.dismiss();
-							ListViewActivity.setUsername(userNameEdit.getText().toString());
-							if(rememberPassword.isChecked()) {
-								getSharedPreferences(PREFS_NAME,MODE_PRIVATE)
-						        .edit()
-						        .putString(PREF_USERNAME, userNameEdit.getText().toString())
-						        .putString(PREF_PASSWORD, passwordEdit.getText().toString())
-						        .commit();
+							// dialog.dismiss();
+							ListViewActivity.setUsername(userNameEdit.getText()
+									.toString());
+							if (rememberPassword.isChecked()) {
+								getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+										.edit()
+										.putString(
+												PREF_USERNAME,
+												userNameEdit.getText()
+														.toString())
+										.putString(
+												PREF_PASSWORD,
+												passwordEdit.getText()
+														.toString()).commit();
 							}
 							startActivity(new Intent(Login.this,
 									ListViewActivity.class));
 						} else {
-							dialog.dismiss();
-							alertBuilder("Username or password is incorrect",
+							// dialog.dismiss();
+							showAlert(
+									"Username or password is incorrect",
 									"Please, check if they are correctly written.",
 									drawable);
 						}
 
 					} catch (ClientProtocolException e) {
 						// TODO Auto-generated catch block
-						dialog.dismiss();
-						alertBuilder("Client Protocol Exception",
-								"Try again...",
+						// dialog.dismiss();
+						showAlert("Client Protocol Exception", "Try again...",
 								drawable);
 					} catch (ClassNotFoundException e) {
 						// TODO Auto-generated catch block
-						dialog.dismiss();
-						alertBuilder("Class not found",
-								"Try again...",
-								drawable);
+						// dialog.dismiss();
+						showAlert("Class not found", "Try again...", drawable);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
-						dialog.dismiss();
-						alertBuilder("Connection problem",
+						// dialog.dismiss();
+						showAlert(
+								"Connection problem",
 								"Check your internet properties and try again.",
 								drawable);
 					}
@@ -104,34 +117,36 @@ public class Login extends Activity {
 			});
 
 		} else {
+			// get login and password from preferences file
 			parameters = savedSettings();
-			
-		try {
-			if (connection.connect(parameters, URL)) {
-				startActivity(new Intent(Login.this, ListViewActivity.class));
+
+			try {
+				if (connection.connect(parameters, URL)) {
+					startActivity(new Intent(Login.this, ListViewActivity.class));
+				}
+			} catch (ClientProtocolException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-		}
-		
+
 	}
 
-	public void alertBuilder(String title, String text, Drawable drawable) {
+	private void showAlert(String title, String text, Drawable drawable) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
 		builder.setMessage(text).setIcon(drawable).setCancelable(false)
-				.setTitle(title).setNeutralButton("Ok",
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								dialog.cancel();
-							}
-						});
+				.setTitle(title)
+				.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
+					}
+				});
 		builder.show();
 	}
 
