@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -23,11 +22,11 @@ public class Login extends Activity {
 	private Button logInButton;
 	private EditText userNameEdit;
 	private EditText passwordEdit;
-	// private ProgressDialog dialog;
 	private String parameters;
 	private String URL = "http://mcdimus.appspot.com/login";
-	// private AlertDialog.Builder builder;
 	private CheckBox rememberPassword;
+	
+	private Connection connection;
 
 	/**
 	 * Object to manipulate preferences file. Store and fetch desired data.
@@ -39,7 +38,7 @@ public class Login extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		final Connection connection = new Connection();
+		connection = new Connection();
 
 		// if no saved settings found show login activity
 		if (preferencesManager.isEmpty()) {
@@ -62,6 +61,7 @@ public class Login extends Activity {
 					parameters = "username="
 							+ userNameEdit.getText().toString() + "&password="
 							+ passwordEdit.getText().toString();
+					
 					try {
 						// if connected and answer received
 						if (connection.connect(parameters, URL)) {
@@ -71,8 +71,6 @@ public class Login extends Activity {
 										userNameEdit.getText().toString(),
 										passwordEdit.getText().toString());
 							} else {
-								// ListViewActivity.setUsername(userNameEdit.getText()
-								// .toString());
 								preferencesManager.putUsername(userNameEdit
 										.getText().toString());
 							}
@@ -101,6 +99,9 @@ public class Login extends Activity {
 			try {
 				if (connection.connect(parameters, URL)) {
 					startActivity(new Intent(Login.this, ListViewActivity.class));
+				} else {
+					showAlert("Username or password is incorrect",
+							"Please, check if they are correctly written.");
 				}
 			} catch (ClientProtocolException e) {
 				showAlert("Shit happened!", "Client Protocol Exception");
@@ -111,9 +112,8 @@ public class Login extends Activity {
 						"Check your internet properties and try again.");
 			}
 		}
-
 	}
-
+	
 	/**
 	 * Build and show alert dialog with specified settings. <br>
 	 * Method for inner use only.
