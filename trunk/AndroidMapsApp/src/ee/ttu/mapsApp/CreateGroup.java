@@ -32,7 +32,7 @@ public class CreateGroup extends Activity {
 			public void onClick(View v) {
 				groupNameEdit = (EditText) findViewById(R.id.editGroupName);
 				descriptionEdit = (EditText) findViewById(R.id.editGroupDescription);
-				parameters = "creator=" + LocalData.getUsername()
+				parameters = "id="+LocalData.getUserId()+"&creator=" + LocalData.getUsername()
 						+ "&groupname=" + groupNameEdit.getText().toString()
 						+ "&description="
 						+ descriptionEdit.getText().toString();
@@ -43,6 +43,8 @@ public class CreateGroup extends Activity {
 								.show();
 						LocalData
 								.setMyGroup(groupNameEdit.getText().toString());
+						
+						// TODO: instead of ListViewActvity should open a map.
 						startActivity(new Intent(CreateGroup.this,
 								ListViewActivity.class));
 					}
