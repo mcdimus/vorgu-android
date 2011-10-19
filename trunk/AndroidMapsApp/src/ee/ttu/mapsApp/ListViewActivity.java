@@ -7,7 +7,6 @@ import org.apache.http.client.ClientProtocolException;
 
 import android.app.ListActivity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,17 +21,16 @@ public class ListViewActivity extends ListActivity {
 	private String parameters;
 	private String URL = "http://mcdimus.appspot.com/join_group";
 
-	protected static List<String> groups;
-	// private static String username;
-	private static String myGroup;
+	private List<String> groups;
+	private String myGroup;
 
-	public static String getMyGroup() {
-		return myGroup;
-	}
-
-	public static void setMyGroup(String myGroup) {
-		ListViewActivity.myGroup = myGroup;
-	}
+//	public static String getMyGroup() {
+//		return myGroup;
+//	}
+//
+//	public static void setMyGroup(String myGroup) {
+//		ListViewActivity.myGroup = myGroup;
+//	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -41,16 +39,19 @@ public class ListViewActivity extends ListActivity {
 
 		// redirected from Login Activity
 		// get groups from message NB! there SHOULD be groups in messages
-		groups = Connection.message.getGroups();
+		groups = LocalData.getGroups();
 		setListAdapter(new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, groups));
 	}
 
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		Connection connection = new Connection();
-		parameters = "id=" + Connection.message.getUserId() + "&groupname="
+		// parameters for joining group with <groupname>; 
+		// <id> is needed to change group on user with <id>
+		parameters = "id=" + LocalData.getUserId() + "&groupname="
 				+ groups.get(position);
 		myGroup = groups.get(position);
+		LocalData.setMyGroup(myGroup);
 		try {
 			if (connection.connect(parameters, URL)) {
 				Toast.makeText(
