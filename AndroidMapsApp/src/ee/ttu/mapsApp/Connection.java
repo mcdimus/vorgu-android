@@ -40,7 +40,10 @@ public class Connection {
 			if(message.getGroups() != null) {
 				ListViewActivity.groups = message.getGroups();
 			}
-			ListViewActivity.setUserId(message.getUserId());
+			if(message.getUserId() != 0) {
+				ListViewActivity.setUserId(message.getUserId());
+			}
+
 			return true;
 		}
 		objectReader.close();

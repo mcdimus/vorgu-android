@@ -20,6 +20,11 @@ public class CreateGroup extends Activity {
 	private EditText descriptionEdit;
 	private String parameters;
 	private String URL = "http://mcdimus.appspot.com/new_group";
+	
+	/**
+	 * Object to manipulate preferences file. Store and fetch desired data.
+	 */
+	private PreferencesManager preferencesManager = new PreferencesManager(this);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,7 +37,7 @@ public class CreateGroup extends Activity {
 			public void onClick(View v) {
 				groupNameEdit = (EditText) findViewById(R.id.editGroupName);
 				descriptionEdit = (EditText) findViewById(R.id.editGroupDescription);
-				parameters = "creator=" + ListViewActivity.getUsername()
+				parameters = "creator=" + preferencesManager.getUsername()
 						+ "&groupname=" + groupNameEdit.getText().toString()
 						+ "&description="
 						+ descriptionEdit.getText().toString();
