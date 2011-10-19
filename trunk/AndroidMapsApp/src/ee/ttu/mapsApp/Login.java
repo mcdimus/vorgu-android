@@ -6,7 +6,6 @@ import org.apache.http.client.ClientProtocolException;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,9 +29,10 @@ public class Login extends Activity {
 	// private AlertDialog.Builder builder;
 	private CheckBox rememberPassword;
 
-	public static final String PREFS_NAME = "AppSettings";
-	private static final String PREF_USERNAME = "username";
-	private static final String PREF_PASSWORD = "password";
+	/**
+	 * Object to manipulate preferences file. Store and fetch desired data.
+	 */
+	private PreferencesManager preferencesManager = new PreferencesManager(this);
 
 	/** Called when the activity is first created. */
 	@Override
@@ -42,17 +42,14 @@ public class Login extends Activity {
 		final Connection connection = new Connection();
 
 		// if no saved settings found show login activity
-		if (savedSettings() == null) {
+		if (preferencesManager.isEmpty()) {
 			setContentView(R.layout.login);
 
 			userNameEdit = (EditText) findViewById(R.id.editUserName);
 			passwordEdit = (EditText) findViewById(R.id.editPassword);
-			signUpButton = (Button) this.findViewById(R.id.buttonSignUp);
-			logInButton = (Button) this.findViewById(R.id.buttonLogIn);
-			rememberPassword = (CheckBox) this
-					.findViewById(R.id.chkRememberPassword);
-			final Drawable drawable = this.getResources().getDrawable(
-					R.drawable.alert_dialog_icon);
+			signUpButton = (Button) findViewById(R.id.buttonSignUp);
+			logInButton = (Button) findViewById(R.id.buttonLogIn);
+			rememberPassword = (CheckBox) findViewById(R.id.chkRememberPassword);
 
 			this.signUpButton.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -60,85 +57,76 @@ public class Login extends Activity {
 				}
 			});
 			this.logInButton.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					// dialog = ProgressDialog.show(Login.this, "",
-					// "Loading. Please wait...", true);
-					// dialog.setCancelable(true);
 
+				public void onClick(View v) {
 					parameters = "username="
 							+ userNameEdit.getText().toString() + "&password="
 							+ passwordEdit.getText().toString();
 					try {
 						// if connected and answer received
 						if (connection.connect(parameters, URL)) {
-							// dialog.dismiss();
-							ListViewActivity.setUsername(userNameEdit.getText()
-									.toString());
+
 							if (rememberPassword.isChecked()) {
-								getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-										.edit()
-										.putString(
-												PREF_USERNAME,
-												userNameEdit.getText()
-														.toString())
-										.putString(
-												PREF_PASSWORD,
-												passwordEdit.getText()
-														.toString()).commit();
+								preferencesManager.putUsernameAndPassword(
+										userNameEdit.getText().toString(),
+										passwordEdit.getText().toString());
+							} else {
+								// ListViewActivity.setUsername(userNameEdit.getText()
+								// .toString());
+								preferencesManager.putUsername(userNameEdit
+										.getText().toString());
 							}
 							startActivity(new Intent(Login.this,
 									ListViewActivity.class));
 						} else {
-							// dialog.dismiss();
-							showAlert(
-									"Username or password is incorrect",
-									"Please, check if they are correctly written.",
-									drawable);
+							showAlert("Username or password is incorrect",
+									"Please, check if they are correctly written.");
 						}
 
 					} catch (ClientProtocolException e) {
-						// TODO Auto-generated catch block
-						// dialog.dismiss();
-						showAlert("Client Protocol Exception", "Try again...",
-								drawable);
+						showAlert("Shit happened!", "Client Protocol Exception");
 					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						// dialog.dismiss();
-						showAlert("Class not found", "Try again...", drawable);
+						showAlert("Shit happened!", "Class Not Found Exception");
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						// dialog.dismiss();
-						showAlert(
-								"Connection problem",
-								"Check your internet properties and try again.",
-								drawable);
+						showAlert("Connection problem",
+								"Check your internet properties and try again.");
 					}
 				}
 			});
 
 		} else {
 			// get login and password from preferences file
-			parameters = savedSettings();
+			parameters = preferencesManager.getUsernameAndPasswordAsParams();
 
 			try {
 				if (connection.connect(parameters, URL)) {
 					startActivity(new Intent(Login.this, ListViewActivity.class));
 				}
 			} catch (ClientProtocolException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				showAlert("Shit happened!", "Client Protocol Exception");
 			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				showAlert("Shit happened!", "Class Not Found Exception");
+			} catch (IOException e) {
+				showAlert("Connection problem",
+						"Check your internet properties and try again.");
 			}
 		}
 
 	}
 
-	private void showAlert(String title, String text, Drawable drawable) {
+	/**
+	 * Build and show alert dialog with specified settings. <br>
+	 * Method for inner use only.
+	 * 
+	 * @param title
+	 *            - title of the alert dialog.
+	 * @param text
+	 *            - main message.
+	 */
+	private void showAlert(String title, String text) {
+		final Drawable drawable = this.getResources().getDrawable(
+				R.drawable.alert_dialog_icon);
+
 		AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
 		builder.setMessage(text).setIcon(drawable).setCancelable(false)
 				.setTitle(title)
@@ -148,16 +136,5 @@ public class Login extends Activity {
 					}
 				});
 		builder.show();
-	}
-
-	public String savedSettings() {
-		SharedPreferences preferences = getSharedPreferences(PREFS_NAME,
-				MODE_PRIVATE);
-		String username = preferences.getString(PREF_USERNAME, null);
-		String password = preferences.getString(PREF_PASSWORD, null);
-		if (username != null || password != null) {
-			return "username=" + username + "&password=" + password;
-		}
-		return null;
 	}
 }

@@ -27,11 +27,16 @@ public class ListViewActivity extends ListActivity {
 	
 	protected static List<String> groups;
 
-	private static String username;
+//	private static String username;
 	
 	private static String myGroup;
 	
 	private static long userId;
+	
+	/**
+	 * Object to manipulate preferences file. Store and fetch desired data.
+	 */
+	private PreferencesManager preferencesManager = new PreferencesManager(this);
 	
 	public String savedSettings() {
 		SharedPreferences preferences = getSharedPreferences(PREFS_NAME,
@@ -59,13 +64,13 @@ public class ListViewActivity extends ListActivity {
 		ListViewActivity.userId = userId;
 	}
 
-	public static String getUsername() {
-		return username;
-	}
-
-	public static void setUsername(String username) {
-		ListViewActivity.username = username;
-	}
+//	public static String getUsername() {
+//		return username;
+//	}
+//
+//	public static void setUsername(String username) {
+//		ListViewActivity.username = username;
+//	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
