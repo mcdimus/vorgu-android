@@ -13,6 +13,7 @@ import ttu.vorgu2.hw1.Message;
 public class Connection {
 	public boolean connect(String parameters, String urlToConnect)
 			throws ClientProtocolException, IOException, ClassNotFoundException {
+		
 		HttpURLConnection connection;
 		OutputStreamWriter request = null;
 
