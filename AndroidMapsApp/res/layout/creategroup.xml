@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent" android:layout_width="fill_parent">
+	<TableLayout android:id="@+id/groupTable"
+		android:layout_height="wrap_content" android:layout_width="fill_parent"
+		android:background="#000000">
+		<TableRow>
+			<TextView android:text="Group's name:" android:width="150px"
+				android:layout_marginTop="150px" android:layout_marginLeft="30px" />
+			<EditText android:id="@+id/editGroupName"
+				android:layout_marginTop="150px" android:layout_marginLeft="30px"
+				android:width="200px" />
+		</TableRow>
+		<TableRow>
+			<TextView android:text="Description:" android:width="150px"
+				android:layout_marginTop="20px" android:layout_marginLeft="30px" />
+			<EditText android:id="@+id/editGroupDescription"
+				android:layout_marginTop="20px" android:layout_marginLeft="30px"
+				android:width="200px" />
+		</TableRow>
+	</TableLayout>
+	<LinearLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_below="@+id/groupTable">
+		<Button android:id="@+id/buttonCreateGroup"
+			android:layout_width="wrap_content" android:layout_height="wrap_content"
+			android:layout_marginLeft="130px" android:layout_marginTop="50px"
+			android:paddingLeft="60px" android:paddingRight="60px" android:text="Create" />
+	</LinearLayout>
+</RelativeLayout>
