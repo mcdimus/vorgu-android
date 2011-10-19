@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+   xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_height="fill_parent" 
+    android:layout_width="fill_parent">
+<TableLayout 
+	android:id="@+id/table"
+    android:layout_height="wrap_content" 
+    android:layout_width="fill_parent"
+    android:background="#000000">
+    <TableRow> 
+        <TextView 
+            android:text="User Name:"
+            android:width ="120px"
+            android:layout_marginTop="50px"
+            android:layout_marginLeft="40px"
+            />
+        <EditText 
+            android:id="@+id/regUserName" 
+            android:layout_marginTop="50px"
+            android:layout_marginLeft="40px"
+            android:width="220px" />
+    </TableRow> 
+    <TableRow>
+     <TextView 
+            android:text="First name:"
+            android:width ="120px"
+            android:layout_marginTop="10px"
+            android:layout_marginLeft="40px"
+            />
+        <EditText 
+            android:id="@+id/regFirstName" 
+            android:layout_marginTop="10px"
+            android:layout_marginLeft="40px"
+            android:width="220px" />
+    </TableRow>
+        <TableRow>
+     <TextView 
+            android:text="Last name:"
+            android:width ="120px"
+            android:layout_marginTop="10px"
+            android:layout_marginLeft="40px"
+            />
+        <EditText 
+            android:id="@+id/regLastName" 
+            android:layout_marginTop="10px"
+            android:layout_marginLeft="40px"
+            android:width="220px" />
+    </TableRow>
+            <TableRow>
+     <TextView 
+            android:text="Phone:"
+            android:width ="120px"
+            android:layout_marginTop="10px"
+            android:layout_marginLeft="40px"
+            />
+        <EditText 
+            android:id="@+id/regPhoneNumber" 
+            android:layout_marginTop="10px"
+            android:layout_marginLeft="40px"
+            android:width="220px" />
+    </TableRow>
+    <TableRow>
+        <TextView 
+            android:text="Password:"
+            android:layout_marginLeft="40px"
+            />
+        <EditText 
+            android:id="@+id/regPassword"
+             android:layout_marginTop="10px"
+            android:layout_marginLeft="40px" 
+            android:password="true" />
+    </TableRow>
+
+</TableLayout>
+    	<LinearLayout 
+    			android:layout_height="wrap_content" 
+    			android:layout_width="fill_parent"
+    			android:layout_below="@+id/table">  	
+             <Button 
+            	android:id="@+id/regButtonSignUp" 
+             	android:layout_width="wrap_content"
+            	android:layout_height="wrap_content"
+            	android:layout_marginLeft="140px"
+            	android:layout_marginTop="50px"
+            	android:paddingLeft="60px"
+           		android:paddingRight="60px"
+            android:text="Sign up" />
+            </LinearLayout>
+</RelativeLayout>

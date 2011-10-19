@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_height="fill_parent" android:layout_width="fill_parent">
+	<TableLayout android:id="@+id/table" android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:background="#000000">
+		<TableRow>
+			<TextView android:text="User Name:" android:width="120px"
+				android:layout_marginTop="150px" android:layout_marginLeft="30px" />
+			<EditText android:id="@+id/editUserName"
+				android:layout_marginTop="150px" android:layout_marginLeft="30px"
+				android:width="200px" />
+		</TableRow>
+		<TableRow>
+			<TextView android:text="Password:"
+				android:layout_marginLeft="30px" />
+			<EditText android:id="@+id/editPassword"
+				android:layout_marginLeft="30px" android:password="true" />
+		</TableRow>
+		<TableRow>
+			<TextView />
+			<CheckBox android:id="@+id/chkRememberPassword"
+				android:layout_width="fill_parent" android:layout_height="wrap_content"
+				android:text="Remember Password" />
+		</TableRow>
+
+	</TableLayout>
+	<LinearLayout android:layout_height="wrap_content"
+		android:layout_width="fill_parent" android:layout_below="@+id/table">
+		<Button android:id="@+id/buttonLogIn" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_marginLeft="30px"
+			android:layout_marginTop="50px" android:paddingLeft="60px"
+			android:paddingRight="60px" android:text="Log In" />
+		<Button android:id="@+id/buttonSignUp" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:layout_marginLeft="30px"
+			android:layout_marginTop="50px" android:paddingLeft="60px"
+			android:paddingRight="60px" android:text="Sign up" />
+	</LinearLayout>
+</RelativeLayout>
