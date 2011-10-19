@@ -13,7 +13,7 @@ import ttu.vorgu2.hw1.Message;
 public  class Connection {
 	
 //	public static long userId;
-	public static Message message;
+	public  Message message;
 	
 	public boolean connect(String parameters, String urlToConnect)
 			throws ClientProtocolException, IOException, ClassNotFoundException {
@@ -42,12 +42,14 @@ public  class Connection {
 		// Reading data from the server
 		message = (Message) objectReader.readObject();
 		if (message.isOk()) {
-//			if(message.getGroups() != null) {
+			if(message.getGroups() != null) {
 //				ListViewActivity.groups = message.getGroups();
-//			}
-//			if(message.getUserId() != 0) {
+				LocalData.setGroups(message.getGroups());
+			}
+			if(message.getUserId() != 0) {
 //				userId = message.getUserId();
-//			}
+				LocalData.setUserId(message.getUserId());
+			}
 			connected = true;
 		}
 		objectReader.close();

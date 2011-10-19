@@ -25,7 +25,7 @@ public class Login extends Activity {
 	private String parameters;
 	private String URL = "http://mcdimus.appspot.com/login";
 	private CheckBox rememberPassword;
-	
+
 	private Connection connection;
 
 	/**
@@ -33,7 +33,9 @@ public class Login extends Activity {
 	 */
 	private PreferencesManager preferencesManager = new PreferencesManager(this);
 
-	/** Called when the activity is first created. */
+	/** 
+	 * Called when the activity is first created. 
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,7 +63,7 @@ public class Login extends Activity {
 					parameters = "username="
 							+ userNameEdit.getText().toString() + "&password="
 							+ passwordEdit.getText().toString();
-					
+
 					try {
 						// if connected and answer received
 						if (connection.connect(parameters, URL)) {
@@ -70,10 +72,9 @@ public class Login extends Activity {
 								preferencesManager.putUsernameAndPassword(
 										userNameEdit.getText().toString(),
 										passwordEdit.getText().toString());
-							} else {
-								preferencesManager.putUsername(userNameEdit
-										.getText().toString());
 							}
+							LocalData.setUsername(userNameEdit.getText()
+									.toString());
 							startActivity(new Intent(Login.this,
 									ListViewActivity.class));
 						} else {
@@ -113,7 +114,7 @@ public class Login extends Activity {
 			}
 		}
 	}
-	
+
 	/**
 	 * Build and show alert dialog with specified settings. <br>
 	 * Method for inner use only.

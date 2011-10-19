@@ -18,9 +18,7 @@ public class PreferencesManager {
 	 */
 	private Context context;
 
-	
 	private static final String PREFS_NAME = "AppSettings";
-//	private static final String PREF_ID = "userid";
 	private static final String PREF_USERNAME = "username";
 	private static final String PREF_PASSWORD = "password";
 
@@ -52,32 +50,6 @@ public class PreferencesManager {
 		return true;
 	}
 	
-//	/**
-//	 * Store user id in the preferences file.
-//	 * 
-//	 * @param userId
-//	 *            - user id to store.
-//	 */
-//	public void putUserId(String userId) {
-//		getSharedPrefs().edit().putString(PREF_ID, userId).commit();
-//	}
-//	
-//	/**
-//	 * Get user id.
-//	 * 
-//	 * @return current user`s id or null if there is no data.
-//	 */
-//	public String getUserId() {
-//		SharedPreferences preferences = getSharedPrefs();
-//
-//		String userId = preferences.getString(PREF_ID, null);
-//
-//		if (userId != null) {
-//			return userId;
-//		}
-//		return null;
-//	}
-
 	/**
 	 * Store username in the preferences file.
 	 * 

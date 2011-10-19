@@ -20,11 +20,6 @@ public class CreateGroup extends Activity {
 	private EditText descriptionEdit;
 	private String parameters;
 	private String URL = "http://mcdimus.appspot.com/new_group";
-	
-	/**
-	 * Object to manipulate preferences file. Store and fetch desired data.
-	 */
-	private PreferencesManager preferencesManager = new PreferencesManager(this);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -37,35 +32,33 @@ public class CreateGroup extends Activity {
 			public void onClick(View v) {
 				groupNameEdit = (EditText) findViewById(R.id.editGroupName);
 				descriptionEdit = (EditText) findViewById(R.id.editGroupDescription);
-				parameters = "creator=" + preferencesManager.getUsername()
+				parameters = "creator=" + LocalData.getUsername()
 						+ "&groupname=" + groupNameEdit.getText().toString()
 						+ "&description="
 						+ descriptionEdit.getText().toString();
 				try {
-					if(connection.connect(parameters, URL)) {
-						Toast.makeText(CreateGroup.this, 
-					            "New group has been added!", 
-					            Toast.LENGTH_SHORT).show();
-						ListViewActivity.setMyGroup(groupNameEdit.getText().toString());
-						startActivity(new Intent(CreateGroup.this, ListViewActivity.class));
-					} 
+					if (connection.connect(parameters, URL)) {
+						Toast.makeText(CreateGroup.this,
+								"New group has been added!", Toast.LENGTH_SHORT)
+								.show();
+						LocalData
+								.setMyGroup(groupNameEdit.getText().toString());
+						startActivity(new Intent(CreateGroup.this,
+								ListViewActivity.class));
+					}
 				} catch (ClientProtocolException e) {
-					Toast.makeText(CreateGroup.this, 
-				            "ERROR: ClientProtocolException.", 
-				            Toast.LENGTH_SHORT).show();
+					Toast.makeText(CreateGroup.this,
+							"ERROR: ClientProtocolException.",
+							Toast.LENGTH_SHORT).show();
 				} catch (ClassNotFoundException e) {
-					Toast.makeText(CreateGroup.this, 
-				            "ERROR: ClassNotFoundException.", 
-				            Toast.LENGTH_SHORT).show();
+					Toast.makeText(CreateGroup.this,
+							"ERROR: ClassNotFoundException.",
+							Toast.LENGTH_SHORT).show();
 				} catch (IOException e) {
-					Toast.makeText(CreateGroup.this, 
-				            "ERROR: IOException.", 
-				            Toast.LENGTH_SHORT).show();
+					Toast.makeText(CreateGroup.this, "ERROR: IOException.",
+							Toast.LENGTH_SHORT).show();
 				}
-			
 			}
-			
 		});
 	}
-
 }
