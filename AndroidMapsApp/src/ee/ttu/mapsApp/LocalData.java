@@ -1,6 +1,9 @@
 package ee.ttu.mapsApp;
 
+import java.io.Serializable;
 import java.util.List;
+
+import ttu.vorgu2.hw1.SerializablePerson;
 
 /**
  * Class serves as local data storage for android application.
@@ -28,6 +31,8 @@ public class LocalData {
 	 * User`s current group.
 	 */
 	private static String myGroup = null;
+	
+	private static List<SerializablePerson> persons = null;
 
 	/**
 	 * Get user id.
@@ -103,6 +108,20 @@ public class LocalData {
 	 */
 	public static void setMyGroup(String myGroup) {
 		LocalData.myGroup = myGroup;
+	}
+
+	/**
+	 * @return the persons
+	 */
+	public static List<SerializablePerson> getPersons() {
+		return persons;
+	}
+
+	/**
+	 * @param persons the persons to set
+	 */
+	public static void setPersons(List<SerializablePerson> persons) {
+		LocalData.persons = persons;
 	}
 
 }

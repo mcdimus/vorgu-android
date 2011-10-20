@@ -12,7 +12,9 @@ public class Message implements Serializable {
 
 	private boolean ok;
 	private long userId = 0;
+	private String groupname = null;
     private List<String> groups = null;
+    private List<SerializablePerson> persons = null;
     
 	public Message(boolean ok) {
 		this.ok = ok;
@@ -21,6 +23,12 @@ public class Message implements Serializable {
 	public Message(boolean ok, List<String> groups) {
 		this.ok = ok;
 		this.groups = groups;
+	}
+	
+	public Message(boolean ok, String groupname, List<SerializablePerson> persons) {
+		this.ok = ok;
+		this.setGroupname(groupname);
+		this.setPersons(persons);
 	}
 	
 	public Message(boolean ok, long userId, List<String> groups) {
@@ -69,6 +77,34 @@ public class Message implements Serializable {
 	 */
 	public void setUserId(long userId) {
 		this.userId = userId;
+	}
+
+	/**
+	 * @return the groupname
+	 */
+	public String getGroupname() {
+		return groupname;
+	}
+
+	/**
+	 * @param groupname the groupname to set
+	 */
+	public void setGroupname(String groupname) {
+		this.groupname = groupname;
+	}
+
+	/**
+	 * @return the persons
+	 */
+	public List<SerializablePerson> getPersons() {
+		return persons;
+	}
+
+	/**
+	 * @param persons the persons to set
+	 */
+	public void setPersons(List<SerializablePerson> persons) {
+		this.persons = persons;
 	}
 	
 }

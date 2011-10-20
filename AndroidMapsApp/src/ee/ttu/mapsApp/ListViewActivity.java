@@ -24,14 +24,6 @@ public class ListViewActivity extends ListActivity {
 	private List<String> groups;
 	private String myGroup;
 
-//	public static String getMyGroup() {
-//		return myGroup;
-//	}
-//
-//	public static void setMyGroup(String myGroup) {
-//		ListViewActivity.myGroup = myGroup;
-//	}
-
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,7 +38,7 @@ public class ListViewActivity extends ListActivity {
 
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		Connection connection = new Connection();
-		// parameters for joining group with <groupname>; 
+		// parameters for joining group with <groupname>;
 		// <id> is needed to change group on user with <id>
 		parameters = "id=" + LocalData.getUserId() + "&groupname="
 				+ groups.get(position);
