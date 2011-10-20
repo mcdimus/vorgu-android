@@ -10,11 +10,11 @@ import org.apache.http.client.ClientProtocolException;
 
 import ttu.vorgu2.hw1.Message;
 
-public  class Connection {
-	
-//	public static long userId;
-	public  Message message;
-	
+public class Connection {
+
+	// public static long userId;
+	public Message message;
+
 	public boolean connect(String parameters, String urlToConnect)
 			throws ClientProtocolException, IOException, ClassNotFoundException {
 		
@@ -43,12 +43,13 @@ public  class Connection {
 		message = (Message) objectReader.readObject();
 		if (message.isOk()) {
 			if(message.getGroups() != null) {
-//				ListViewActivity.groups = message.getGroups();
 				LocalData.setGroups(message.getGroups());
 			}
 			if(message.getUserId() != 0) {
-//				userId = message.getUserId();
 				LocalData.setUserId(message.getUserId());
+			}
+			if (message.getPersons() != null) {
+				LocalData.setPersons(message.getPersons());
 			}
 			connected = true;
 		}
@@ -56,5 +57,4 @@ public  class Connection {
 
 		return connected;
 	}
-
 }
