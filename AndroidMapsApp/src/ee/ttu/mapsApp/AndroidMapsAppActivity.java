@@ -8,6 +8,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -45,33 +46,35 @@ public class AndroidMapsAppActivity extends MapActivity {
 		mapView.setBuiltInZoomControls(true);
 		mapController = mapView.getController();
 		mapController.setZoom(14); // Zoom 1 is world view
-		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationListener = new GeoUpdateHandler();
 	}
 	
 
 	@Override
 	protected void onResume() {
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		locationListener = new GeoUpdateHandler();
+		Criteria criteria = new Criteria();
+		criteria.setAccuracy(Criteria.ACCURACY_FINE);
+		String provider = locationManager.getBestProvider(criteria, true); // na telefone rabotaet!!!
+		locationManager.requestLocationUpdates(provider, 0, 0, locationListener);
 		super.onResume();
 	}
 	
 	@Override
 	protected void onPause() {
-		super.onResume();
 		/* GPS, as it turns out, consumes battery like crazy */
 		locationManager.removeUpdates(locationListener);
+		super.onResume();
 	}
 
 	@Override
 	protected void onStop() {
-		super.onStop();
 		if(locationManager != null) {
 			locationManager.removeUpdates(locationListener);
-		} else {
-			
 		}
-		
+		locationManager = null;
+		super.onStop();
+		finish();
 	}
 	@Override
 	protected boolean isRouteDisplayed() {
