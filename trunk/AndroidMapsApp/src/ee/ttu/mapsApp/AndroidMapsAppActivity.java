@@ -1,6 +1,7 @@
 package ee.ttu.mapsApp;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -15,15 +16,18 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Toast;
-
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
+import com.google.android.maps.Overlay;
+import com.google.android.maps.OverlayItem;
 
 public class AndroidMapsAppActivity extends MapActivity {
 	private Handler handler;
 	private Context context = this;
+	
+	private List<Overlay> mapOverlays;
 
 	private MapController mapController;
 	private MapView mapView;
@@ -32,6 +36,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 	private Connection connection;
 	
 	private GeoUpdateHandler locationListener;
+
 
 	/** Called when the activity is first created. */
 	@Override
@@ -51,6 +56,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 
 	@Override
 	protected void onResume() {
+		mapOverlays = mapView.getOverlays();
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		locationListener = new GeoUpdateHandler();
 		Criteria criteria = new Criteria();
@@ -98,6 +104,15 @@ public class AndroidMapsAppActivity extends MapActivity {
 			int lat = (int) (location.getLatitude() * 1E6);
 			int lng = (int) (location.getLongitude() * 1E6);
 			GeoPoint point = new GeoPoint(lat, lng);
+//			if(!mapOverlays.isEmpty()) {
+//				mapOverlays.remove(0);
+//			}
+			mapOverlays.clear();
+			Drawable myDrawable = context.getResources().getDrawable(R.drawable.mappinred);
+		    Marker marker = new Marker(myDrawable,context);
+		    OverlayItem my_marker = new OverlayItem(point, LocalData.getUsername(), "You are here!!!");
+		    marker.addOverlay(my_marker);
+		    mapOverlays.add(marker);
 			mapController.animateTo(point); // mapController.setCenter(point);
 
 			sendMyCoordsToServer(lat, lng);
@@ -171,6 +186,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 						String str = "";
 						for(int i = 0; i < LocalData.getPersons().size(); i++) {
 							str += LocalData.getPersons().get(i).getUsername();
+							
 						}
 						Toast.makeText(context, str,
 								Toast.LENGTH_SHORT).show();
