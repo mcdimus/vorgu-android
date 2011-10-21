@@ -23,13 +23,14 @@ import com.google.android.maps.MapView;
 public class AndroidMapsAppActivity extends MapActivity {
 	private Handler handler;
 	private Context context = this;
-	private Location location;
 
 	private MapController mapController;
 	private MapView mapView;
 	private LocationManager locationManager;
 
 	private Connection connection;
+	
+	private GeoUpdateHandler locationListener;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -42,13 +43,36 @@ public class AndroidMapsAppActivity extends MapActivity {
 
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
-		mapView.setStreetView(true);
 		mapController = mapView.getController();
 		mapController.setZoom(14); // Zoom 1 is world view
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new GeoUpdateHandler());
+		locationListener = new GeoUpdateHandler();
+	}
+	
+
+	@Override
+	protected void onResume() {
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+		super.onResume();
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onResume();
+		/* GPS, as it turns out, consumes battery like crazy */
+		locationManager.removeUpdates(locationListener);
 	}
 
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if(locationManager != null) {
+			locationManager.removeUpdates(locationListener);
+		} else {
+			
+		}
+		
+	}
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
@@ -141,7 +165,11 @@ public class AndroidMapsAppActivity extends MapActivity {
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
-						Toast.makeText(context, "FetchedList",
+						String str = "";
+						for(int i = 0; i < LocalData.getPersons().size(); i++) {
+							str += LocalData.getPersons().get(i).getUsername();
+						}
+						Toast.makeText(context, str,
 								Toast.LENGTH_SHORT).show();
 					}
 				});
