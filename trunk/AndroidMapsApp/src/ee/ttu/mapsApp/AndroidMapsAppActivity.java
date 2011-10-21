@@ -7,14 +7,12 @@ import org.apache.http.client.ClientProtocolException;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
@@ -39,21 +37,16 @@ public class AndroidMapsAppActivity extends MapActivity {
 		super.onCreate(bundle);
 		setContentView(R.layout.maps); // bind the layout to the activity
 
-		// handler fror thread
+		// handler for thread
 		handler = new Handler();
 
-		// ???? xz za4em eto nyzhno bilo :)
-		// // create a map view
-		// RelativeLayout linearLayout = (RelativeLayout)
-		// findViewById(R.id.mainlayout);
 		mapView = (MapView) findViewById(R.id.mapview);
 		mapView.setBuiltInZoomControls(true);
 		mapView.setStreetView(true);
 		mapController = mapView.getController();
-		mapController.setZoom(5); // Zoom 1 is world view
+		mapController.setZoom(14); // Zoom 1 is world view
 		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0,
-				0, new GeoUpdateHandler());
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, new GeoUpdateHandler());
 	}
 
 	@Override

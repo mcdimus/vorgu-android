@@ -1,6 +1,5 @@
 package ee.ttu.mapsApp;
 
-import java.io.Serializable;
 import java.util.List;
 
 import ttu.vorgu2.hw1.SerializablePerson;
