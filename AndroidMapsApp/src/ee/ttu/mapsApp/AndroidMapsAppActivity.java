@@ -44,6 +44,11 @@ public class AndroidMapsAppActivity extends MapActivity {
 	private Connection connection;
 
 	private GeoUpdateHandler locationListener;
+	
+	private PreferencesManager preferencesManager = new PreferencesManager(this);
+	
+	private String parameters;
+	private String URL = "http://mcdimus.appspot.com/join_group";
 
 	/** Called when the activity is first created. */
 	@Override
@@ -106,6 +111,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 		case R.id.changegroup:
 			List<String> list = LocalData.getGroups();
 			int selected = -1;
+			Toast.makeText(getBaseContext(), LocalData.getMyGroup(), Toast.LENGTH_SHORT).show();
 			for(int i = 0; i < list.size(); i++) {
 				if(list.get(i).equals(LocalData.getMyGroup())) {
 					selected = i;
@@ -116,8 +122,24 @@ public class AndroidMapsAppActivity extends MapActivity {
 			dialog.setTitle("Select the desired group");
 			dialog.setSingleChoiceItems(items, selected, new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
-			        Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
-			        dialog.dismiss();
+			    	parameters = "id=" + LocalData.getUserId() + "&groupname="
+					+ items[item];
+			    	try {
+						if(connection.connect(parameters, URL)) {
+							LocalData.setMyGroup(items[item].toString());
+							preferencesManager.putGroup(LocalData.getMyGroup());
+							startActivity(new Intent(AndroidMapsAppActivity.this,
+									AndroidMapsAppActivity.class));
+						}
+					} catch (ClientProtocolException e) {
+						showAlert("ERROR!", "Client Protocol Exception");
+					} catch (ClassNotFoundException e) {
+						showAlert("ERROR!", "Class Not Found Exception");
+					} catch (IOException e) {
+						showAlert("Connection problem",
+								"Check your internet properties and try again.");
+					}
+					 dialog.dismiss();
 			    }
 			});
 			dialog.show();
@@ -195,9 +217,9 @@ public class AndroidMapsAppActivity extends MapActivity {
 			}
 
 		} catch (ClientProtocolException e) {
-			showAlert("Shit happened!", "Client Protocol Exception");
+			showAlert("ERROR!", "Client Protocol Exception");
 		} catch (ClassNotFoundException e) {
-			showAlert("Shit happened!", "Class Not Found Exception");
+			showAlert("ERROR!", "Class Not Found Exception");
 		} catch (IOException e) {
 			showAlert("Connection problem",
 					"Check your internet properties and try again.");

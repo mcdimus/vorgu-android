@@ -51,6 +51,9 @@ public class Connection {
 			if (message.getPersons() != null) {
 				LocalData.setPersons(message.getPersons());
 			}
+			if (message.getGroupname() != null) {
+				LocalData.setMyGroup(message.getGroupname());
+			}
 			connected = true;
 		}
 		objectReader.close();
