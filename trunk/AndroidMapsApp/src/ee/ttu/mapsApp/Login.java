@@ -33,8 +33,8 @@ public class Login extends Activity {
 	 */
 	private PreferencesManager preferencesManager = new PreferencesManager(this);
 
-	/** 
-	 * Called when the activity is first created. 
+	/**
+	 * Called when the activity is first created.
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,15 +75,17 @@ public class Login extends Activity {
 							}
 							LocalData.setUsername(userNameEdit.getText()
 									.toString());
-							if(preferencesManager.getGroup() != null) {
-								LocalData.setMyGroup(preferencesManager.getGroup());
+							if (preferencesManager.getGroup() != null
+									|| LocalData.getMyGroup() != null) {
+								LocalData.setMyGroup(preferencesManager
+										.getGroup());
 								startActivity(new Intent(Login.this,
 										AndroidMapsAppActivity.class));
 							} else {
 								startActivity(new Intent(Login.this,
 										ListViewActivity.class));
 							}
-							
+
 						} else {
 							showAlert("Username or password is incorrect",
 									"Please, check if they are correctly written.");
@@ -107,13 +109,16 @@ public class Login extends Activity {
 			try {
 				if (connection.connect(parameters, URL)) {
 					LocalData.setUsername(preferencesManager.getUsername());
-					if(preferencesManager.getGroup() != null) {
+					if (preferencesManager.getGroup() != null
+							|| LocalData.getMyGroup() != null) {
 						LocalData.setMyGroup(preferencesManager.getGroup());
-						startActivity(new Intent(Login.this, AndroidMapsAppActivity.class));
+						startActivity(new Intent(Login.this,
+								AndroidMapsAppActivity.class));
 					} else {
-						startActivity(new Intent(Login.this, ListViewActivity.class));
+						startActivity(new Intent(Login.this,
+								ListViewActivity.class));
 					}
-					
+
 				} else {
 					showAlert("Username or password is incorrect",
 							"Please, check if they are correctly written.");
@@ -144,12 +149,12 @@ public class Login extends Activity {
 
 		AlertDialog.Builder builder = new AlertDialog.Builder(Login.this);
 		builder.setMessage(text).setIcon(drawable).setCancelable(false)
-				.setTitle(title)
-				.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
-					}
-				});
+				.setTitle(title).setNeutralButton("Ok",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
 		builder.show();
 	}
 }
