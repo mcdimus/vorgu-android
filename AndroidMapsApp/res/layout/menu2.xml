@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/find_person"
+   		  android:title="Find on map"
+          android:icon="@drawable/magnifying_glass"
+          />
+    <item android:id="@+id/distance"
+   		  android:title="Distance"
+   		  android:icon="@drawable/distance"
+          />
     <item android:id="@+id/changegroup"
    		  android:title="Change group"
           android:icon="@drawable/change_group"

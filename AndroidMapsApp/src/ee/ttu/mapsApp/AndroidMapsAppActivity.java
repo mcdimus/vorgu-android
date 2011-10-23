@@ -1,6 +1,7 @@
 package ee.ttu.mapsApp;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -48,7 +49,13 @@ public class AndroidMapsAppActivity extends MapActivity {
 	
 	private String parameters;
 	private String URL;
-
+	
+	private String selectedMember = LocalData.getUsername();
+	
+	private Location myLocation;
+	
+	private ArrayList<String> distanceBetween = new ArrayList<String>();
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle bundle) {
@@ -112,10 +119,53 @@ public class AndroidMapsAppActivity extends MapActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
+		int selected = -1;
 		switch (item.getItemId()) {
+		case R.id.find_person:
+			final String[] usernames = new String[LocalData.getPersons().size()];
+			for(int i = 0; i < LocalData.getPersons().size(); i++) {
+				if(LocalData.getPersons().get(i).getUsername().equals(LocalData.getUsername())) {
+					usernames[i] = LocalData.getPersons().get(i).getUsername() + " (you)";
+				} else {
+					usernames[i] = LocalData.getPersons().get(i).getUsername();
+				}
+				if(selectedMember.contains(LocalData.getPersons().get(i).getUsername())) {
+					selected = i;
+				}
+			}
+			AlertDialog.Builder dialog2 = new AlertDialog.Builder(this);
+			dialog2.setTitle("Select the member");
+			dialog2.setSingleChoiceItems(usernames, selected, new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog2, int user) {
+			    	int latitude = (int)LocalData.getPersons().get(user).getLatitude();
+			    	int longitude = (int)LocalData.getPersons().get(user).getLongitude();
+			    	GeoPoint point = new GeoPoint(latitude, longitude);
+			    	selectedMember = usernames[user];
+			    	mapController.animateTo(point);
+					 dialog2.dismiss();
+			    }
+			});
+			dialog2.show();
+			return true;
+			
+		case R.id.distance:
+			final CharSequence[] distances = distanceBetween.toArray(new CharSequence[distanceBetween.size()]);
+			AlertDialog.Builder dialog3 = new AlertDialog.Builder(this);
+			dialog3.setTitle("Distance");
+			dialog3.setItems(distances, new DialogInterface.OnClickListener() {
+			    public void onClick(DialogInterface dialog3, int item) {
+			        dialog3.cancel();
+			    }
+			});
+			dialog3.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog3, int id) {
+					dialog3.cancel();
+				}
+			});
+			dialog3.show();
+			return true;
 		case R.id.changegroup:
 			List<String> list = LocalData.getGroups();
-			int selected = -1;
 			for(int i = 0; i < list.size(); i++) {
 				if(list.get(i).equals(LocalData.getMyGroup())) {
 					selected = i;
@@ -157,9 +207,21 @@ public class AndroidMapsAppActivity extends MapActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
+	}
+	
+	private void distance(double lat, double lng, String user) {
+		Location location = new Location("Point B");
+		location.setLatitude(lat);
+		location.setLongitude(lng);
+		double distance;
+		distance = myLocation.distanceTo(location) / 1000;
+		String result = "To " + user + ": " + String.valueOf(distance) + " km";
+		distanceBetween.add(result);
 	}
 
 	/**
@@ -176,6 +238,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 
 		@Override
 		public void onLocationChanged(Location location) {
+			myLocation = location;
 			int lat = (int) (location.getLatitude() * 1E6);
 			int lng = (int) (location.getLongitude() * 1E6);
 			GeoPoint point = new GeoPoint(lat, lng);
@@ -291,6 +354,9 @@ public class AndroidMapsAppActivity extends MapActivity {
 						for (int i = 0; i < LocalData.getPersons().size(); i++) {
 							if (!LocalData.getPersons().get(i).getUsername()
 									.equals(LocalData.getUsername())) {
+								distance((LocalData.getPersons().get(i)
+										.getLatitude()/1E6), (LocalData.getPersons().get(i)
+												.getLongitude()/1E6), LocalData.getPersons().get(i).getUsername());
 								newOverlay((int)LocalData.getPersons().get(i)
 										.getLatitude(), (int)LocalData.getPersons()
 										.get(i).getLongitude(), drawable,
