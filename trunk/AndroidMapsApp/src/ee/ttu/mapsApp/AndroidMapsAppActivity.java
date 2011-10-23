@@ -104,17 +104,23 @@ public class AndroidMapsAppActivity extends MapActivity {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.changegroup:
-			final CharSequence[] items = {"Red", "Green", "Blue"};
-
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setTitle("Select the desired group");
-			builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+			List<String> list = LocalData.getGroups();
+			int selected = -1;
+			for(int i = 0; i < list.size(); i++) {
+				if(list.get(i).equals(LocalData.getMyGroup())) {
+					selected = i;
+				}
+			}
+			final CharSequence[] items = list.toArray(new CharSequence[list.size()]);
+			AlertDialog.Builder dialog = new AlertDialog.Builder(this);
+			dialog.setTitle("Select the desired group");
+			dialog.setSingleChoiceItems(items, selected, new DialogInterface.OnClickListener() {
 			    public void onClick(DialogInterface dialog, int item) {
 			        Toast.makeText(getApplicationContext(), items[item], Toast.LENGTH_SHORT).show();
+			        dialog.dismiss();
 			    }
 			});
-			AlertDialog alert = builder.create();
-			alert.show();
+			dialog.show();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
