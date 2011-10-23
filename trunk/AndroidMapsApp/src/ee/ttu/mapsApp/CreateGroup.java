@@ -20,6 +20,7 @@ public class CreateGroup extends Activity {
 	private EditText descriptionEdit;
 	private String parameters;
 	private String URL = "http://mcdimus.appspot.com/new_group";
+	private PreferencesManager preferencesManager = new PreferencesManager(this);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +44,8 @@ public class CreateGroup extends Activity {
 								.show();
 						LocalData
 								.setMyGroup(groupNameEdit.getText().toString());
+				
+						preferencesManager.putGroup(groupNameEdit.getText().toString());
 						
 						// TODO: instead of ListViewActvity should open a map.
 						startActivity(new Intent(CreateGroup.this,
