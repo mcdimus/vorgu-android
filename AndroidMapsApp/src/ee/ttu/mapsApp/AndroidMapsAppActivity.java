@@ -2,6 +2,7 @@ package ee.ttu.mapsApp;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -9,7 +10,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
 import android.location.Criteria;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -163,6 +166,40 @@ public class AndroidMapsAppActivity extends MapActivity {
 	}
 
 	/**
+	 * To get the real address with the help of
+	 * longitude and latitude.
+	 * @param currentLatitude - the latitude.
+	 * @param currentLongitude - the longitude.
+	 * @return - string with address.
+	 */
+	private String getAddress(int currentLatitude, int currentLongitude, String username) {
+		try {
+			Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+			List<Address> addresses = geocoder.getFromLocation((double)(currentLatitude / 1E6),
+					(double)(currentLongitude / 1E6), 1);
+			String result = "";
+			if (addresses.size() > 0) {
+				for (int i = 0; i < addresses.get(0).getMaxAddressLineIndex(); i++) {
+					result += addresses.get(0).getAddressLine(i) + "\n";
+				}
+				result += addresses.get(0).getCountryName();
+			}
+			if(username.equals(LocalData.getUsername()) && !result.equals("")) {
+				result = "Your address is:\n" + result;
+			} else if(username.equals(LocalData.getUsername()) && result.equals("")) {
+				result = "Your address is unknown";
+			} else if(result.equals("")) {
+				result = "Address is unknown";
+			} else {
+				result = "Address:\n" + result;
+			}
+			return result;
+		} catch (IOException ex) {
+			return null;
+		}
+	}
+
+	/**
 	 * TODO: Here should be the processing of received list of persons from
 	 * server. List is stored in LocalData.persons. Also see some code in the
 	 * Connection.connect.
@@ -185,10 +222,10 @@ public class AndroidMapsAppActivity extends MapActivity {
 						for (int i = 0; i < LocalData.getPersons().size(); i++) {
 							if (!LocalData.getPersons().get(i).getUsername()
 									.equals(LocalData.getUsername())) {
-								newOverlay((int) LocalData.getPersons().get(i)
-										.getLatitude(), (int) LocalData
-										.getPersons().get(i).getLongitude(),
-										drawable, LocalData.getPersons().get(i)
+								newOverlay((int)LocalData.getPersons().get(i)
+										.getLatitude(), (int)LocalData.getPersons()
+										.get(i).getLongitude(), drawable,
+										LocalData.getPersons().get(i)
 												.getUsername());
 							}
 
@@ -200,12 +237,12 @@ public class AndroidMapsAppActivity extends MapActivity {
 		new Thread(runnable).start();
 	}
 
-	private void newOverlay(int latitude, int longitude, Drawable drawable,
-			String username) {
+	private void newOverlay(int latitude, int longitude,
+			Drawable drawable, String username) {
 		GeoPoint point = new GeoPoint(latitude, longitude);
 		Marker marker = new Marker(drawable, context);
 		OverlayItem my_marker = new OverlayItem(point, "Member: " + username,
-				"You are here!!!");
+				getAddress(latitude, longitude, username));
 		marker.addOverlay(my_marker);
 		mapOverlays.add(marker);
 	}
