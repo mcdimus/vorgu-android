@@ -149,6 +149,10 @@ public class AndroidMapsAppActivity extends MapActivity {
 			});
 			dialog.show();
 			return true;
+		case R.id.logout:
+			preferencesManager.clearPreferences();
+			startActivity(new Intent(this, Login.class));
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

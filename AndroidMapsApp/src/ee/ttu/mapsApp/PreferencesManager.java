@@ -52,6 +52,14 @@ public class PreferencesManager {
 	}
 	
 	/**
+	 * Removes the saved preferences.
+	 */
+	public void clearPreferences() {
+		SharedPreferences preferences = getSharedPrefs();
+		preferences.edit().clear().commit();
+	}
+	
+	/**
 	 * Store username in the preferences file.
 	 * 
 	 * @param username
