@@ -15,7 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Toast;
+
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapController;
@@ -26,7 +26,7 @@ import com.google.android.maps.OverlayItem;
 public class AndroidMapsAppActivity extends MapActivity {
 	private Handler handler;
 	private Context context = this;
-	
+
 	private List<Overlay> mapOverlays;
 
 	private MapController mapController;
@@ -34,9 +34,8 @@ public class AndroidMapsAppActivity extends MapActivity {
 	private LocationManager locationManager;
 
 	private Connection connection;
-	
-	private GeoUpdateHandler locationListener;
 
+	private GeoUpdateHandler locationListener;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -52,7 +51,6 @@ public class AndroidMapsAppActivity extends MapActivity {
 		mapController = mapView.getController();
 		mapController.setZoom(14); // Zoom 1 is world view
 	}
-	
 
 	@Override
 	protected void onResume() {
@@ -61,11 +59,14 @@ public class AndroidMapsAppActivity extends MapActivity {
 		locationListener = new GeoUpdateHandler();
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		String provider = locationManager.getBestProvider(criteria, true); // na telefone rabotaet!!!
-		locationManager.requestLocationUpdates(provider, 0, 0, locationListener);
+		String provider = locationManager.getBestProvider(criteria, true); // na
+		// telefone
+		// rabotaet!!!
+		locationManager
+				.requestLocationUpdates(provider, 0, 0, locationListener);
 		super.onResume();
 	}
-	
+
 	@Override
 	protected void onPause() {
 		/* GPS, as it turns out, consumes battery like crazy */
@@ -75,13 +76,14 @@ public class AndroidMapsAppActivity extends MapActivity {
 
 	@Override
 	protected void onStop() {
-		if(locationManager != null) {
+		if (locationManager != null) {
 			locationManager.removeUpdates(locationListener);
 		}
 		locationManager = null;
 		super.onStop();
 		finish();
 	}
+
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;
@@ -104,17 +106,11 @@ public class AndroidMapsAppActivity extends MapActivity {
 			int lat = (int) (location.getLatitude() * 1E6);
 			int lng = (int) (location.getLongitude() * 1E6);
 			GeoPoint point = new GeoPoint(lat, lng);
-//			if(!mapOverlays.isEmpty()) {
-//				mapOverlays.remove(0);
-//			}
 			mapOverlays.clear();
-			Drawable myDrawable = context.getResources().getDrawable(R.drawable.mappinred);
-		    Marker marker = new Marker(myDrawable,context);
-		    OverlayItem my_marker = new OverlayItem(point, LocalData.getUsername(), "You are here!!!");
-		    marker.addOverlay(my_marker);
-		    mapOverlays.add(marker);
-			mapController.animateTo(point); // mapController.setCenter(point);
-
+			Drawable myDrawable = context.getResources().getDrawable(
+					R.drawable.mappinred);
+			newOverlay(lat, lng, myDrawable, LocalData.getUsername());
+			mapController.animateTo(point);
 			sendMyCoordsToServer(lat, lng);
 		}
 
@@ -167,8 +163,9 @@ public class AndroidMapsAppActivity extends MapActivity {
 	}
 
 	/**
-	 * TODO: Here should be the processing of received list of persons from server.
-	 * List is stored in LocalData.persons. Also see some code in the Connection.connect.
+	 * TODO: Here should be the processing of received list of persons from
+	 * server. List is stored in LocalData.persons. Also see some code in the
+	 * Connection.connect.
 	 */
 	private void processListWithPersons() {
 		// Do something long
@@ -183,18 +180,34 @@ public class AndroidMapsAppActivity extends MapActivity {
 				handler.post(new Runnable() {
 					@Override
 					public void run() {
-						String str = "";
-						for(int i = 0; i < LocalData.getPersons().size(); i++) {
-							str += LocalData.getPersons().get(i).getUsername();
-							
+						Drawable drawable = context.getResources().getDrawable(
+								R.drawable.mappingreen);
+						for (int i = 0; i < LocalData.getPersons().size(); i++) {
+							if (!LocalData.getPersons().get(i).getUsername()
+									.equals(LocalData.getUsername())) {
+								newOverlay((int) LocalData.getPersons().get(i)
+										.getLatitude(), (int) LocalData
+										.getPersons().get(i).getLongitude(),
+										drawable, LocalData.getPersons().get(i)
+												.getUsername());
+							}
+
 						}
-						Toast.makeText(context, str,
-								Toast.LENGTH_SHORT).show();
 					}
 				});
 			}
 		};
 		new Thread(runnable).start();
+	}
+
+	private void newOverlay(int latitude, int longitude, Drawable drawable,
+			String username) {
+		GeoPoint point = new GeoPoint(latitude, longitude);
+		Marker marker = new Marker(drawable, context);
+		OverlayItem my_marker = new OverlayItem(point, "Member: " + username,
+				"You are here!!!");
+		marker.addOverlay(my_marker);
+		mapOverlays.add(marker);
 	}
 
 	/**
@@ -213,12 +226,12 @@ public class AndroidMapsAppActivity extends MapActivity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(
 				AndroidMapsAppActivity.this);
 		builder.setMessage(text).setIcon(drawable).setCancelable(false)
-				.setTitle(title)
-				.setNeutralButton("Ok", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
-					}
-				});
+				.setTitle(title).setNeutralButton("Ok",
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								dialog.cancel();
+							}
+						});
 		builder.show();
 	}
 }
