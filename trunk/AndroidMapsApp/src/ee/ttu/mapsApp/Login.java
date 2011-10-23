@@ -76,6 +76,7 @@ public class Login extends Activity {
 							LocalData.setUsername(userNameEdit.getText()
 									.toString());
 							if(preferencesManager.getGroup() != null) {
+								LocalData.setMyGroup(preferencesManager.getGroup());
 								startActivity(new Intent(Login.this,
 										AndroidMapsAppActivity.class));
 							} else {
@@ -107,6 +108,7 @@ public class Login extends Activity {
 				if (connection.connect(parameters, URL)) {
 					LocalData.setUsername(preferencesManager.getUsername());
 					if(preferencesManager.getGroup() != null) {
+						LocalData.setMyGroup(preferencesManager.getGroup());
 						startActivity(new Intent(Login.this, AndroidMapsAppActivity.class));
 					} else {
 						startActivity(new Intent(Login.this, ListViewActivity.class));
