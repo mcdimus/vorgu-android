@@ -22,7 +22,6 @@ import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
@@ -73,6 +72,14 @@ public class AndroidMapsAppActivity extends MapActivity {
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
 		String provider = locationManager.getBestProvider(criteria, true); 
+		Location location = locationManager.getLastKnownLocation(provider);
+		int lat = (int) (location.getLatitude() * 1E6);
+		int lng = (int) (location.getLongitude() * 1E6);
+		GeoPoint point = new GeoPoint(lat, lng);
+		Drawable myDrawable = context.getResources().getDrawable(
+				R.drawable.mappinred);
+		newOverlay(lat, lng, myDrawable, LocalData.getUsername());
+		mapController.animateTo(point);
 		locationManager
 				.requestLocationUpdates(provider, 0, 0, locationListener);
 		super.onResume();
