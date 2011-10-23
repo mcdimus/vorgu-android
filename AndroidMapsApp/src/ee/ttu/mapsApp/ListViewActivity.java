@@ -23,7 +23,7 @@ public class ListViewActivity extends ListActivity {
 
 	private List<String> groups;
 	private String myGroup;
-
+	private PreferencesManager preferencesManager = new PreferencesManager(this);
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,6 +44,7 @@ public class ListViewActivity extends ListActivity {
 				+ groups.get(position);
 		myGroup = groups.get(position);
 		LocalData.setMyGroup(myGroup);
+		preferencesManager.putGroup(myGroup);
 		try {
 			if (connection.connect(parameters, URL)) {
 				Toast.makeText(
