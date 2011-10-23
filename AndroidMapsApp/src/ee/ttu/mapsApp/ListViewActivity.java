@@ -78,10 +78,6 @@ public class ListViewActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.join_new_group:
-			Toast.makeText(this, "You clicked on Item 1", Toast.LENGTH_LONG)
-					.show();
-			return true;
 		case R.id.create_group:
 			startActivity(new Intent(ListViewActivity.this, CreateGroup.class));
 			return true;
