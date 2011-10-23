@@ -21,6 +21,7 @@ public class PreferencesManager {
 	private static final String PREFS_NAME = "AppSettings";
 	private static final String PREF_USERNAME = "username";
 	private static final String PREF_PASSWORD = "password";
+	private static final String PREF_GROUP = "myGroup";
 
 	/**
 	 * Constructor. Creates new PreferencesManager for the specified context.
@@ -75,6 +76,33 @@ public class PreferencesManager {
 		}
 		return null;
 	}
+	
+	/**
+	 * Store group in the preferences file.
+	 * 
+	 * @param myGroup
+	 *            - group to store.
+	 */
+	public void putGroup(String myGroup) {
+		getSharedPrefs().edit().putString(PREF_GROUP, myGroup).commit();
+	}
+	
+	/**
+	 * Get group.
+	 * 
+	 * @return current group or null if there is no data.
+	 */
+	public String getGroup() {
+		SharedPreferences preferences = getSharedPrefs();
+
+		String myGroup = preferences.getString(PREF_GROUP, null);
+
+		if (myGroup != null) {
+			return myGroup;
+		}
+		return null;
+	}
+	
 
 	/**
 	 * Store username and password in the preferences file.

@@ -75,8 +75,14 @@ public class Login extends Activity {
 							}
 							LocalData.setUsername(userNameEdit.getText()
 									.toString());
-							startActivity(new Intent(Login.this,
-									ListViewActivity.class));
+							if(preferencesManager.getGroup() != null) {
+								startActivity(new Intent(Login.this,
+										AndroidMapsAppActivity.class));
+							} else {
+								startActivity(new Intent(Login.this,
+										ListViewActivity.class));
+							}
+							
 						} else {
 							showAlert("Username or password is incorrect",
 									"Please, check if they are correctly written.");
@@ -100,7 +106,7 @@ public class Login extends Activity {
 			try {
 				if (connection.connect(parameters, URL)) {
 					LocalData.setUsername(preferencesManager.getUsername());
-					startActivity(new Intent(Login.this, ListViewActivity.class));
+					startActivity(new Intent(Login.this, AndroidMapsAppActivity.class));
 				} else {
 					showAlert("Username or password is incorrect",
 							"Please, check if they are correctly written.");
