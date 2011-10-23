@@ -41,14 +41,14 @@ public class AndroidMapsAppActivity extends MapActivity {
 	private MapView mapView;
 	private LocationManager locationManager;
 
-	private Connection connection;
+	private Connection connection = new Connection();;
 
 	private GeoUpdateHandler locationListener;
 	
 	private PreferencesManager preferencesManager = new PreferencesManager(this);
 	
 	private String parameters;
-	private String URL = "http://mcdimus.appspot.com/join_group";
+	private String URL;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -72,9 +72,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 		locationListener = new GeoUpdateHandler();
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
-		String provider = locationManager.getBestProvider(criteria, true); // na
-		// telefone
-		// rabotaet!!!
+		String provider = locationManager.getBestProvider(criteria, true); 
 		locationManager
 				.requestLocationUpdates(provider, 0, 0, locationListener);
 		super.onResume();
@@ -111,7 +109,6 @@ public class AndroidMapsAppActivity extends MapActivity {
 		case R.id.changegroup:
 			List<String> list = LocalData.getGroups();
 			int selected = -1;
-			Toast.makeText(getBaseContext(), LocalData.getMyGroup(), Toast.LENGTH_SHORT).show();
 			for(int i = 0; i < list.size(); i++) {
 				if(list.get(i).equals(LocalData.getMyGroup())) {
 					selected = i;
@@ -124,6 +121,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 			    public void onClick(DialogInterface dialog, int item) {
 			    	parameters = "id=" + LocalData.getUserId() + "&groupname="
 					+ items[item];
+			    	URL = "http://mcdimus.appspot.com/join_group";
 			    	try {
 						if(connection.connect(parameters, URL)) {
 							LocalData.setMyGroup(items[item].toString());
@@ -202,9 +200,8 @@ public class AndroidMapsAppActivity extends MapActivity {
 	 *            - longitude.
 	 */
 	public void sendMyCoordsToServer(int lat, int lng) {
-		connection = new Connection();
-		String URL = "http://mcdimus.appspot.com/set_coords";
-		String parameters = "id=" + LocalData.getUserId() + "&latitude=" + lat
+		URL = "http://mcdimus.appspot.com/set_coords";
+		parameters = "id=" + LocalData.getUserId() + "&latitude=" + lat
 				+ "&longitude=" + lng;
 
 		try {
