@@ -74,7 +74,6 @@ public class Marker extends ItemizedOverlay {
             rect.inset(-5, -5);
             rect.offsetTo(markerBottomCenterCoords.x - rect.width()/2, markerBottomCenterCoords.y - markerHeight - rect.height());
             paintText.setTextAlign(Paint.Align.CENTER);
-//            paintText.setTextSize(12.0f);
             paintText.setARGB(255, 255, 255, 255);
             paintRect.setARGB(130, 0, 0, 0);
             
