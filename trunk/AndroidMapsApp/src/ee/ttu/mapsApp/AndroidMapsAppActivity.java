@@ -220,7 +220,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 		location.setLongitude(lng);
 		double distance;
 		distance = myLocation.distanceTo(location) / 1000;
-		String result = "To " + user + ": " + String.valueOf(distance) + " km";
+		String result = "To " + user + ": " + String.valueOf((int)distance) + " km";
 		distanceBetween.add(result);
 	}
 
