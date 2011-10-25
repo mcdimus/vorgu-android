@@ -75,10 +75,8 @@ public class Login extends Activity {
 							}
 							LocalData.setUsername(userNameEdit.getText()
 									.toString());
-							if (preferencesManager.getGroup() != null
-									|| LocalData.getMyGroup() != null) {
-								LocalData.setMyGroup(preferencesManager
-										.getGroup());
+							if (LocalData.getMyGroup() != null) {
+								preferencesManager.putGroup(LocalData.getMyGroup());
 								startActivity(new Intent(Login.this,
 										AndroidMapsAppActivity.class));
 							} else {
@@ -109,9 +107,7 @@ public class Login extends Activity {
 			try {
 				if (connection.connect(parameters, URL)) {
 					LocalData.setUsername(preferencesManager.getUsername());
-					if (preferencesManager.getGroup() != null
-							|| LocalData.getMyGroup() != null) {
-						LocalData.setMyGroup(preferencesManager.getGroup());
+					if (LocalData.getMyGroup() != null) {
 						startActivity(new Intent(Login.this,
 								AndroidMapsAppActivity.class));
 					} else {
