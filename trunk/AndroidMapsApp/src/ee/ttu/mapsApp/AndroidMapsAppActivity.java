@@ -214,6 +214,12 @@ public class AndroidMapsAppActivity extends MapActivity {
 		return false;
 	}
 	
+	/**
+	 * To show distance to the specified user.
+	 * @param lat - latitude of the user.
+	 * @param lng - longitude of the user.
+	 * @param user - the specified user.
+	 */
 	private void distance(double lat, double lng, String user) {
 		Location location = new Location("Point B");
 		location.setLatitude(lat);
