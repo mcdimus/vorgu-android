@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.apache.http.client.ClientProtocolException;
 
@@ -53,7 +55,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 	private String selectedMember = LocalData.getUsername();
 	
 	private Location myLocation;
-	
+	private Timer timer;
 	private ArrayList<String> distanceBetween = new ArrayList<String>();
 	
 	/** Called when the activity is first created. */
@@ -79,14 +81,6 @@ public class AndroidMapsAppActivity extends MapActivity {
 		Criteria criteria = new Criteria();
 		criteria.setAccuracy(Criteria.ACCURACY_FINE);
 		String provider = locationManager.getBestProvider(criteria, true); 
-		Location location = locationManager.getLastKnownLocation(provider);
-		int lat = (int) (location.getLatitude() * 1E6);
-		int lng = (int) (location.getLongitude() * 1E6);
-		GeoPoint point = new GeoPoint(lat, lng);
-		Drawable myDrawable = context.getResources().getDrawable(
-				R.drawable.mappinred);
-		newOverlay(lat, lng, myDrawable, LocalData.getUsername());
-		mapController.animateTo(point);
 		locationManager
 				.requestLocationUpdates(provider, 0, 0, locationListener);
 		super.onResume();
@@ -245,15 +239,24 @@ public class AndroidMapsAppActivity extends MapActivity {
 		@Override
 		public void onLocationChanged(Location location) {
 			myLocation = location;
-			int lat = (int) (location.getLatitude() * 1E6);
-			int lng = (int) (location.getLongitude() * 1E6);
+			final int lat = (int) (location.getLatitude() * 1E6);
+			final int lng = (int) (location.getLongitude() * 1E6);
 			GeoPoint point = new GeoPoint(lat, lng);
 			mapOverlays.clear();
 			Drawable myDrawable = context.getResources().getDrawable(
 					R.drawable.mappinred);
 			newOverlay(lat, lng, myDrawable, LocalData.getUsername());
 			mapController.animateTo(point);
-			sendMyCoordsToServer(lat, lng);
+			
+			if (timer != null) {timer.cancel();}
+			timer = new Timer(true);
+			timer.scheduleAtFixedRate(new TimerTask() {
+				
+				@Override
+				public void run() {
+					sendMyCoordsToServer(lat, lng);
+				}
+			}, 1000, 20000);
 		}
 
 		@Override
@@ -357,6 +360,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 					public void run() {
 						Drawable drawable = context.getResources().getDrawable(
 								R.drawable.mappingreen);
+						distanceBetween.clear();
 						for (int i = 0; i < LocalData.getPersons().size(); i++) {
 							if (!LocalData.getPersons().get(i).getUsername()
 									.equals(LocalData.getUsername())) {
