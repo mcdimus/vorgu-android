@@ -43,7 +43,7 @@ public class AndroidMapsAppActivity extends MapActivity {
 	private MapView mapView;
 	private LocationManager locationManager;
 
-	private Connection connection = new Connection();;
+	private Connection connection = new Connection();
 
 	private GeoUpdateHandler locationListener;
 	
@@ -195,6 +195,9 @@ public class AndroidMapsAppActivity extends MapActivity {
 			return true;
 		case R.id.logout:
 			preferencesManager.clearPreferences();
+			LocalData.setMyGroup(null);
+			LocalData.setUsername(null);
+			LocalData.setUserId(0);
 			startActivity(new Intent(this, Login.class));
 			return true;
 		default:
